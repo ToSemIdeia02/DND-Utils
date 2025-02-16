@@ -49,7 +49,7 @@ The `attributes2md` tool provides a simple UI to input character attributes and 
 
 3. Run the application:
    ```bash
-   python gui.py
+   python main.py
    ```
 
 4. Use the interface to input your character's details, and export the formatted Markdown to your Obsidian vault.
