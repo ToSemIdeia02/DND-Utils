@@ -56,4 +56,10 @@ The `attributes2md` tool provides a simple UI to input character attributes and 
 
 ---
 
+## Exmple usage
+In the application:
+![image](https://github.com/user-attachments/assets/1defdfbd-f44e-4aaa-b015-b5bd6197d1e1)
+
+Template in Obsidian:
+![image](https://github.com/user-attachments/assets/6447c7ab-f2b0-4630-84e0-a85c040f63bd)
 
