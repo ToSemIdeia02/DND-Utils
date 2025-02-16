@@ -1,8 +1,19 @@
 # gui.py
 import PySimpleGUI as sg
 from .layout import create_first_column, create_second_column, create_third_column, create_fourth_column
-from .events import handle_standard_array, handle_convert_event
-from .constants import ATTRIBUTE_KEYS
+from .events import (handle_standard_array, 
+                    handle_convert_event, 
+                    handle_copy_all_event,
+                    handle_copy_attributes_event,
+                    handle_copy_character_info_event,
+                    handle_copy_skills_event,
+                    handle_copy_spell_stats_event,
+                    handle_caster_event, 
+                    update_skills_table)	
+from .constants import ATTRIBUTE_KEYS, STANDARD_ARRAY
+from attribute_logic import calculate_spell_stats, calculate_proficiency_bonus, generate_character_info, generate_full_output
+
+
 
 # Set theme and create layout
 sg.theme('DarkBlue')
@@ -13,7 +24,7 @@ second_column = create_second_column()
 third_column = create_third_column()
 fourth_column = create_fourth_column()
 
-# Combine columns into bottom section
+# Combine all columns into the bottom section
 bottom_section = [
     [
         sg.Column(first_column, element_justification="center", expand_x=True, expand_y=True),
@@ -26,20 +37,18 @@ bottom_section = [
     ]
 ]
 
-# Top section with buttons
+# Define the top section with buttons
 top_section = [
     [
         sg.Button("Convert to .md", size=(15, 2), key="-CONVERT-", pad=((0, 10), (20, 20))),
         sg.Button("Copy All", size=(15, 2), key="-COPY-ALL-", pad=((10, 0), (20, 20))),
     ],
 ]
-
-# Final layout
+# Combine all sections into the final layout
 layout = [
-    [sg.Column(top_section, justification="center", expand_x=True)],
-    [sg.Column(bottom_section, expand_x=True, expand_y=True)],
+    [sg.Column(top_section, justification="center", expand_x=True)],  # Top section with buttons
+    [sg.Column(bottom_section, expand_x=True, expand_y=True)],        # Bottom section with columns
 ]
-
 # Create window
 window = sg.Window("D&D 5e Character Sheet Generator", layout, finalize=True, size=(1400, 800), resizable=True)
 
@@ -55,19 +64,28 @@ while True:
     if event == sg.WINDOW_CLOSED:
         break
 
-    if event == "-STANDARD-ARRAY-":
-        handle_standard_array(window)
-
     if event == "-CONVERT-":
         handle_convert_event(values, window)
 
-    # Handle other events (copy buttons, etc.)
     if event == "-COPY-ATTRIBUTES-":
-        attributes_text = window["-ATTRIBUTES-TABLE-"].get()
-        window.TKroot.clipboard_clear()
-        window.TKroot.clipboard_append(attributes_text)
-        sg.popup("Attributes table copied to clipboard!")
+        handle_copy_attributes_event(window)
 
-    # Add similar handlers for other copy buttons...
+    if event == "-COPY-SKILLS-":
+        handle_copy_skills_event(window)
+
+    if event == "-COPY-CHARACTER-INFO-":
+        handle_copy_character_info_event(window)
+
+    if event == "-COPY-SPELL-STATS-":
+        handle_copy_spell_stats_event(window)
+
+    if event == "-COPY-ALL-":
+        handle_copy_all_event(values, window)
+        
+    if event == "-STANDARD-ARRAY-":
+        handle_standard_array(window)
+    
+    if event == "-CASTER-":
+        handle_caster_event(values, window)
 
 window.close()
