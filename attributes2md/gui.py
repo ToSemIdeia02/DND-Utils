@@ -10,10 +10,10 @@ from attribute_logic import (
 )
 
 # Define the layout of the GUI
-sg.theme('DarkBlue')  # Set a dark theme <button class="citation-flag" data-index="3">
+sg.theme('DarkBlue')  # Set a dark theme
 
 # Standard array values for testing
-STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]  # Standard array as per D&D 5e <button class="citation-flag" data-index="7">
+STANDARD_ARRAY = [15, 14, 13, 12, 10, 8]  # Standard array as per D&D 5e
 
 # Skill mapping for checkboxes
 SKILL_MAPPING = {
@@ -28,56 +28,54 @@ SKILL_MAPPING = {
 # Define the list of attribute keys for navigation
 attribute_keys = ["-STR-", "-DEX-", "-CON-", "-INT-", "-WIS-", "-CHA-"]
 
-# General character info section
-general_info_section = [
+# First column: Character Info and Attributes sections
+first_column = [
+    # Character Info Section
     [sg.Text("General Character Info", font=("Arial", 14), justification="center")],
     [sg.Text("Name"), sg.Input(key="-CHARACTER-NAME-", size=(20, 1))],
     [sg.Text("Race"), sg.Input(key="-RACE-", size=(20, 1))],
     [sg.Text("Class"), sg.Combo(
-        ["Barbarian", "Fighter", "Paladin", "Ranger", "Sorcerer", "Wizard", 
-         "Bard", "Cleric", "Druid", "Monk", "Rogue", "Warlock", "Artificer"], 
+        ["Barbarian", "Fighter", "Paladin", "Ranger", "Sorcerer", "Wizard",
+         "Bard", "Cleric", "Druid", "Monk", "Rogue", "Warlock", "Artificer"],
         key="-CLASS-", size=(20, 1), readonly=True)],  # Dropdown list for classes
     [sg.Text("Level"), sg.Input(key="-LEVEL-", size=(5, 1))],
     [sg.Text("Speed (ft)"), sg.Input(key="-SPEED-", size=(5, 1))],
     [sg.Text("Inspiration"), sg.Checkbox("", key="-INSPIRATION-")],
     [sg.Text("Current XP"), sg.Input(key="-CURRENT-XP-", size=(10, 1))],
     [sg.Checkbox("Use Average HP", key="-USE-AVERAGE-HP-", default=True)],
-]
-
-# Left column: Input fields for attributes with proficiency checkboxes
-left_column = [
+    
+    # Attributes Section
     [sg.Text("Attributes", font=("Arial", 14), justification="center")],
-    [sg.Button("Standard Array", size=(12, 1), key="-STANDARD-ARRAY-")],  # Renamed button <button class="citation-flag" data-index="2">
-    [sg.Checkbox("Input as String", key="-STRING-MODE-", enable_events=True)],  # Switch for string input mode
+    [sg.Button("Standard Array", size=(12, 1), key="-STANDARD-ARRAY-")],
+    [sg.Checkbox("Input as String", key="-STRING-MODE-", enable_events=True)],
     [sg.Input(key="-ATTRIBUTES-STRING-", size=(30, 1), visible=False, tooltip="Enter values as: STR, DEX, CON, INT, WIS, CHA",
-              text_color="gray", default_text="STR, DEX, CON, INT, WIS, CHA")],  # String input field (initially hidden)
+              text_color="gray", default_text="STR, DEX, CON, INT, WIS, CHA")],
     [sg.Text("STR", key="-TEXT-STR-", visible=True), sg.Input(key="-STR-", size=(5, 1)), sg.Checkbox("Proficient", key="-PROF-STR-", visible=True)],
     [sg.Text("DEX", key="-TEXT-DEX-", visible=True), sg.Input(key="-DEX-", size=(5, 1)), sg.Checkbox("Proficient", key="-PROF-DEX-", visible=True)],
     [sg.Text("CON", key="-TEXT-CON-", visible=True), sg.Input(key="-CON-", size=(5, 1)), sg.Checkbox("Proficient", key="-PROF-CON-", visible=True)],
     [sg.Text("INT", key="-TEXT-INT-", visible=True), sg.Input(key="-INT-", size=(5, 1)), sg.Checkbox("Proficient", key="-PROF-INT-", visible=True)],
     [sg.Text("WIS", key="-TEXT-WIS-", visible=True), sg.Input(key="-WIS-", size=(5, 1)), sg.Checkbox("Proficient", key="-PROF-WIS-", visible=True)],
     [sg.Text("CHA", key="-TEXT-CHA-", visible=True), sg.Input(key="-CHA-", size=(5, 1)), sg.Checkbox("Proficient", key="-PROF-CHA-", visible=True)],
-    [sg.Checkbox("Caster", key="-CASTER-", enable_events=True)],  # Checkbox to toggle spell stats column
-    # Casting stat checkboxes (initially hidden)
+    [sg.Checkbox("Caster", key="-CASTER-", enable_events=True)],
     [sg.Text("Casting Stat", visible=False, key="-CASTING-STAT-LABEL-"),
      sg.Radio("INT", "CASTING_STAT", key="-CASTING-INT-", visible=False),
      sg.Radio("WIS", "CASTING_STAT", key="-CASTING-WIS-", visible=False),
      sg.Radio("CHA", "CASTING_STAT", key="-CASTING-CHA-", visible=False)],
 ]
 
-# Middle column: Skill proficiency and expertise checkboxes
-middle_column = [
+# Second column: Skills section
+second_column = [
     [sg.Text("Skills", font=("Arial", 14), justification="center")],
 ]
 for skill in SKILL_MAPPING.keys():
-    middle_column.append([
+    second_column.append([
         sg.Text(skill, size=(16, 1)),
         sg.Checkbox("Proficient", key=f"-PROF-{skill}-", enable_events=True),
         sg.Checkbox("Expertise", key=f"-EXPERT-{skill}-", enable_events=True)
     ])
 
-# Right column: Output boxes for tables
-right_column = [
+# Third column: Attributes Table and Skills Table
+third_column = [
     [sg.Text("Attributes Table", font=("Arial", 14))],
     [sg.Multiline(size=(40, 10), key="-ATTRIBUTES-TABLE-", disabled=True, expand_x=True, expand_y=True)],
     [sg.Button("Copy Attributes", size=(15, 1), key="-COPY-ATTRIBUTES-")],
@@ -86,10 +84,11 @@ right_column = [
     [sg.Button("Copy Skills", size=(15, 1), key="-COPY-SKILLS-")],
 ]
 
-# Fourth column: Spell stats (initially hidden)
-spell_stats_column = [
+# Fourth column: Character Info and Spell Stats
+fourth_column = [
     [sg.Text("Character Info", font=("Arial", 14))],
     [sg.Multiline(size=(30, 10), key="-CHARACTER-INFO-", disabled=True, expand_x=True, expand_y=True)],
+    [sg.Button("Copy Character Info", size=(15, 1), key="-COPY-CHARACTER-INFO-")],
     [sg.Text("Spell Stats", font=("Arial", 14))],
     [sg.Multiline(size=(30, 10), key="-SPELL-STATS-", disabled=True, expand_x=True, expand_y=True, visible=False)],
     [sg.Button("Copy Spell Stats", size=(15, 1), key="-COPY-SPELL-STATS-")],
@@ -98,30 +97,17 @@ spell_stats_column = [
 # Combine all columns into the bottom section
 bottom_section = [
     [
-        sg.Column(general_info_section, element_justification="center", expand_x=True, expand_y=True),
+        sg.Column(first_column, element_justification="center", expand_x=True, expand_y=True),
         sg.VSeparator(),
-        sg.Column(left_column, element_justification="center", expand_x=True, expand_y=True, key="-LEFT-COLUMN-"),
+        sg.Column(second_column, element_justification="center", expand_x=True, expand_y=True, key="-SECOND-COLUMN-"),
         sg.VSeparator(),
-        sg.Column(middle_column, element_justification="center", expand_x=True, expand_y=True, key="-MIDDLE-COLUMN-"),
+        sg.Column(third_column, element_justification="center", expand_x=True, expand_y=True, key="-THIRD-COLUMN-"),
         sg.VSeparator(),
-        sg.Column(right_column, element_justification="center", expand_x=True, expand_y=True, key="-RIGHT-COLUMN-"),
-        sg.Column(spell_stats_column, element_justification="center", expand_x=True, expand_y=True, key="-SPELL-COLUMN-"),
+        sg.Column(fourth_column, element_justification="center", expand_x=True, expand_y=True, key="-FOURTH-COLUMN-"),
     ]
 ]
 
-# Create the initial layout with only the bottom section
-layout = [[sg.Column(bottom_section, expand_x=True, expand_y=True)]]
-
-# Create the window
-window = sg.Window(
-    "D&D 5e Character Sheet Generator",
-    layout,
-    finalize=True,
-    size=(1400, 800),  # Initial size of the window
-    resizable=True,  # Make the window resizable <button class="citation-flag" data-index="2">
-)
-
-# Define the top section after the window is created
+# Define the top section with buttons
 top_section = [
     [
         sg.Button("Convert to .md", size=(15, 2), key="-CONVERT-", pad=((0, 10), (20, 20))),
@@ -129,8 +115,20 @@ top_section = [
     ],
 ]
 
-# Dynamically extend the layout to include the top section
-window.extend_layout(window, [[sg.Column(top_section, justification="center", expand_x=True)]])
+# Combine all sections into the final layout
+layout = [
+    [sg.Column(top_section, justification="center", expand_x=True)],  # Top section with buttons
+    [sg.Column(bottom_section, expand_x=True, expand_y=True)],        # Bottom section with columns
+]
+
+# Create the window
+window = sg.Window(
+    "D&D 5e Character Sheet Generator",
+    layout,
+    finalize=True,
+    size=(1400, 800),  # Initial size of the window
+    resizable=True,    # Make the window resizable
+)
 
 # Expand elements to fill available space
 window["-ATTRIBUTES-TABLE-"].expand(True, True)  # Attributes table expands horizontally and vertically
@@ -280,6 +278,13 @@ while True:
         window.TKroot.clipboard_append(spell_stats_text)
         sg.popup("Spell stats copied to clipboard!")
 
+    if event == "-COPY-CHARACTER-INFO-":
+        # Copy the Character Info to clipboard
+        character_info_text = window["-CHARACTER-INFO-"].get()
+        window.TKroot.clipboard_clear()
+        window.TKroot.clipboard_append(character_info_text)
+        sg.popup("Character info copied to clipboard!")
+    
     if event == "-COPY-ALL-":
         try:
             # Retrieve the generated outputs

@@ -155,34 +155,7 @@ def calculate_hit_points(class_name, level, constitution_modifier, use_average=T
         total_hp = hit_die * level + (constitution_modifier * level)
     return total_hp
 
-def generate_character_info(character_name, race, class_name, level, speed, inspiration, current_xp, attribute_values, use_average_hp=True):
-    """
-    Generate the character info output following the specified template.
-    """
-    proficiency_bonus = calculate_proficiency_bonus(level)
-    hit_dice = calculate_hit_dice(class_name, level)
-    hit_points = calculate_hit_points(class_name, level, (attribute_values["Constitution"] - 10) // 2, use_average_hp)
-    armor_class = calculate_armor_class(class_name, attribute_values)  # Use the updated AC calculation
-    xp_to_next_level = get_xp_for_next_level(level)
 
-    character_info = f"""
-> [!infobox]
-> # {character_name}
-> ![[image.png|cover hsbig]]
-> ###### Stats
-| Stat                   | Value     |
-| ---------------------- | --------- |
-| Race                   | {race}    |
-| Class                  | {class_name}       |
-| Hit Die                | {hit_dice}   |
-| Hit Points             | {hit_points} / {hit_points}   |
-| Armor Class (AC)       | {armor_class}         |
-| Speed                  | {speed}ft       |
-| Proficiency Bonus (PB) | {proficiency_bonus:+d}         |
-| XP                     | {current_xp} / {xp_to_next_level}|
-| Inspiration            | {inspiration}         |
-"""
-    return character_info
 
 
 
@@ -245,9 +218,7 @@ def generate_character_info(character_name, race, class_name, level, speed, insp
     xp_to_next_level = get_xp_for_next_level(level)
 
     # Generate the character info string in Obsidian-compatible format
-    character_info = f"""
-> [!character|center]
-> ![[image.png|300]] 
+    character_info = f"""> [!infobox]+ Collapsible Infobox
 > ### {character_name}
 > ###### Stats
 | Stat                   | Value     |
@@ -263,6 +234,7 @@ def generate_character_info(character_name, race, class_name, level, speed, insp
 | Inspiration            | {inspiration}         |
 """
     return character_info
+
 
 
 def generate_full_output(character_info, attributes_table, skills_table, spell_stats):
